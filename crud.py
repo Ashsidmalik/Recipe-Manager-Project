@@ -114,6 +114,7 @@ def add_ingredient_to_recipe(db: Session, recipe_id: int, item: schemas.RecipeIn
 def remove_ingredient_from_recipe(db: Session, db_link: models.RecipeIngredient):
     db.delete(db_link)
     db.commit()
+    
 def get_user_linked_ingredients(db: Session, user_id: int) -> List[models.Ingredient]:
     """
     Retrieves unique Ingredient models that are linked to any Recipe 
@@ -131,3 +132,7 @@ def get_user_linked_ingredients(db: Session, user_id: int) -> List[models.Ingred
     ).distinct().all() 
     
     return ingredients
+def delete_master_ingredient(db: Session, db_ingredient: models.Ingredient):
+    """Permanently deletes an ingredient from the master list."""
+    db.delete(db_ingredient)
+    db.commit()

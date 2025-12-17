@@ -276,3 +276,22 @@ def remove_ingredient_from_recipe_endpoint(recipe_id: int, ingredient_id: int, d
     # 3. Delete the link
     crud.remove_ingredient_from_recipe(db, db_link)
     return
+@app.delete(
+    "/ingredients/{ingredient_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["Ingredients"]
+)
+def delete_ingredient_completely(
+    ingredient_id: int, 
+    db: Session = Depends(get_db), 
+    current_user: models.User = CurrentUser
+):
+    """API 3. Delete Master Ingredient: Removes an ingredient from the database."""
+    db_ingredient = crud.get_ingredient_by_id(db, ingredient_id=ingredient_id)
+    
+    if not db_ingredient:
+        raise HTTPException(status_code=404, detail="Ingredient not found")
+    
+    # Use the new CRUD function
+    crud.delete_master_ingredient(db, db_ingredient=db_ingredient)
+    return
